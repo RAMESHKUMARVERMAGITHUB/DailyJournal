@@ -21,8 +21,8 @@ pipeline {
         stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('sonar-server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=reactjs-app \
-                    -Dsonar.projectKey=reactjs-app'''
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=dailyjournal-app \
+                    -Dsonar.projectKey=dailyjournal-app'''
                 }
             }
         }
@@ -47,16 +47,16 @@ pipeline {
              steps{
                  script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                      sh "docker build -t reactjs-app ."
-                      sh "docker tag reactjs-app rameshkumarverma/reactjs-app:latest "
-                      sh "docker push rameshkumarverma/reactjs-app:latest "
+                      sh "docker build -t dailyjournal-app ."
+                      sh "docker tag reactjs-app rameshkumarverma/dailyjournal-app:latest "
+                      sh "docker push rameshkumarverma/dailyjournal-app:latest "
                     }
                 }
             }
         }
         stage("TRIVY Image Scan"){
             steps{
-                sh "trivy image rameshkumarverma/reactjs-app:latest > trivyimage.txt" 
+                sh "trivy image rameshkumarverma/dailyjournal-app:latest > trivyimage.txt" 
             }
         }
         stage('Deploy to Kubernets'){
