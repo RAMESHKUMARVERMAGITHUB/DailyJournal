@@ -47,8 +47,8 @@ pipeline {
              steps{
                  script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                      sh "docker build -t dailyjournal-app ."
-                      sh "docker tag reactjs-app rameshkumarverma/dailyjournal-app:latest "
+                      sh "docker build -t rameshkumarverma/dailyjournal-app:latest ."
+                    //   sh "docker tag reactjs-app rameshkumarverma/dailyjournal-app:latest "
                       sh "docker push rameshkumarverma/dailyjournal-app:latest "
                     }
                 }
@@ -57,6 +57,11 @@ pipeline {
         stage("TRIVY Image Scan"){
             steps{
                 sh "trivy image rameshkumarverma/dailyjournal-app:latest > trivyimage.txt" 
+            }
+        }
+        stage('docker deploy'){
+            steps{
+                sh "docker run -p 3000:3000 -d rameshkumarverma/dailyjournal-app:latest"
             }
         }
         stage('Deploy to Kubernets'){
